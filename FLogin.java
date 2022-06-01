@@ -4,6 +4,8 @@
  * and open the template in the editor.
  */
 package projekbesar;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import projekbesar.koneksi;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,9 +15,16 @@ import java.sql.Statement;
 
 
 public class FLogin extends javax.swing.JFrame {
+    String user;
+    private Dimension dmn = Toolkit.getDefaultToolkit().getScreenSize();
 
     public FLogin() {
         initComponents();
+        initComponents();
+        //kodeLogin = login;
+      
+        this.setLocation(dmn.width/2-this.getWidth()/2,dmn.height/2-this.getHeight()/2);
+        this.setTitle("Login");
     }
 
     /**
@@ -39,10 +48,10 @@ public class FLogin extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("LOGIN");
-        setBackground(new java.awt.Color(153, 153, 255));
 
         org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, jColorChooser1, org.jdesktop.beansbinding.ELProperty.create("${background}"), this, org.jdesktop.beansbinding.BeanProperty.create("background"));
         bindingGroup.addBinding(binding);
@@ -76,6 +85,15 @@ public class FLogin extends javax.swing.JFrame {
             }
         });
 
+        jButton2.setFont(new java.awt.Font("Sylfaen", 0, 11)); // NOI18N
+        jButton2.setForeground(new java.awt.Color(255, 153, 0));
+        jButton2.setText("Batal");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
         jDesktopPane1.setLayer(jLabel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jDesktopPane1.setLayer(jLabel2, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jDesktopPane1.setLayer(txUsername, javax.swing.JLayeredPane.DEFAULT_LAYER);
@@ -83,6 +101,7 @@ public class FLogin extends javax.swing.JFrame {
         jDesktopPane1.setLayer(jLabel3, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jDesktopPane1.setLayer(jLabel4, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jDesktopPane1.setLayer(jButton1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jDesktopPane1.setLayer(jButton2, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout jDesktopPane1Layout = new javax.swing.GroupLayout(jDesktopPane1);
         jDesktopPane1.setLayout(jDesktopPane1Layout);
@@ -101,7 +120,10 @@ public class FLogin extends javax.swing.JFrame {
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jDesktopPane1Layout.createSequentialGroup()
                         .addGroup(jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton1)
+                            .addGroup(jDesktopPane1Layout.createSequentialGroup()
+                                .addComponent(jButton1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton2))
                             .addComponent(txUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 282, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jDesktopPane1Layout.createSequentialGroup()
                                 .addComponent(jLabel3)
@@ -125,7 +147,9 @@ public class FLogin extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pwPass, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
-                .addComponent(jButton1)
+                .addGroup(jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(jButton2))
                 .addContainerGap())
         );
 
@@ -146,17 +170,43 @@ public class FLogin extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        aksi_login();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton1ActionPressed(java.awt.event.KeyEvent evt) {                                         
+        aksi_login();
+    }
+    
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
+        dispose();
+        this.setVisible(false);
+        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        System.exit(0);
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void aksi_login(){
         try{
             Connection c = koneksi.getKoneksi();
             Statement stat = c.createStatement();
-            String query = "SELECT * FROM tb_user";
-        }catch(SQLException e){
-            
-        }
-        
-    }//GEN-LAST:event_jButton1ActionPerformed
-
+            String sql = "  SELECT id_user,pass,lev_akses " +
+                    "       FROM pos_user " +
+                    "       WHERE id_user='"+txUsername.getText().replaceAll("'", "")+"' " +
+                    "           AND pass = '"+pwPass.getText().replaceAll("'", "")+"'";
+            ResultSet res = stat.executeQuery(sql);
+            while(res.next()){
+                user = res.getString(3);
+                akses = "-";
+                this.setVisible(false);
+                frMenu x = new frMenu(Kasir);
+                x.setVisible(true);
+               
+            }
+            if(akses.equals("")){
+                JOptionPane.showMessageDialog(this, "Periksa Kembali");
+            }
+        }catch(Exception ex){}
+    }
     /**
      * @param args the command line arguments
      */
@@ -194,6 +244,7 @@ public class FLogin extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JColorChooser jColorChooser1;
     private javax.swing.JColorChooser jColorChooser2;
     private javax.swing.JDesktopPane jDesktopPane1;

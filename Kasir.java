@@ -36,11 +36,13 @@ public final class Kasir extends javax.swing.JFrame {
         txTampil.setText("Rp. "+totalBiaya+",00");
     }
     
+    
+    
     public void autonumber(){
         try{
             Connection c = koneksi.getKoneksi();
             Statement stat = c.createStatement();
-            String sql = "SELECT MAX(right(no_penjualan,4))AS no_penjualan FROM penjualan";
+            String sql = "SELECT MAX(right(no_penjualan,3))AS no_penjualan FROM penjualan";
             
             ResultSet rs = stat.executeQuery(sql);
             while(rs.next()){
@@ -60,7 +62,7 @@ public final class Kasir extends javax.swing.JFrame {
             rs.close();
             stat.close();
         } catch (SQLException e) {
-            System.out.println("System Autonumber Error!");
+            JOptionPane.showMessageDialog(this, e.getMessage());
         }
         }
     
@@ -160,7 +162,7 @@ public final class Kasir extends javax.swing.JFrame {
         
         utama();
         Date date = new Date();
-        SimpleDateFormat s = new SimpleDateFormat("dd-MM-yyyy");
+        SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd");
         
         txTanggal.setText(s.format(date));
         txTotal.setText("0");
@@ -288,7 +290,6 @@ public final class Kasir extends javax.swing.JFrame {
 
         jLabel11.setText("Kembalian");
 
-        txNoPenjualan.setEnabled(false);
         txNoPenjualan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txNoPenjualanActionPerformed(evt);
@@ -477,17 +478,14 @@ public final class Kasir extends javax.swing.JFrame {
     private void btnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimpanActionPerformed
         // TODO add your handling code here:
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-        
-        String no_penjualan = txNoPenjualan.getText();
-        String id_karyawan = txId_Karyawan.getText();
-        String tgl_beli = txTanggal.getText();
-        String total = txTotal.getText();
         try {
             Connection c = koneksi.getKoneksi();
-            String sql = "INSERT INTO penjualan VALUES (no_penjualaj, id_karyawan,tgl_beli,total)"
-            + "VALUES" +"('"+txNoPenjualan.getText()+"', '"+txId_Karyawan.getText()+"', '"+txTanggal.getText()+"','"+txTanggal.getText()+"')";
+            String sql = "INSERT INTO penjualan VALUES ('"+txNoPenjualan.getText()+"', '"+txId_Karyawan.getText()+"', '"+txTanggal.getText()+"','"+txTotal.getText()+"')";
+            java.sql.PreparedStatement pst=c.prepareStatement(sql);
+            pst.execute();
+            JOptionPane.showMessageDialog(null, "Penyimpanan Data Berhasil");
         } catch (Exception e) {
-            System.out.println("Simpan Penjualan Error!");
+            JOptionPane.showMessageDialog(this, e.getMessage());
         }
         
         try {
@@ -498,12 +496,15 @@ public final class Kasir extends javax.swing.JFrame {
                 String sql = "INSERT INTO rincian_penjualan (no_penjualan, id_barang, nama_barang, jumlah, harga_satuan, total) "
                         + "VALUES ('"+jTable1.getValueAt(i, 0)+"','"+jTable1.getValueAt(i, 1)+"','"+jTable1.getValueAt(i, 2)+"'"
                         + ",'"+jTable1.getValueAt(i, 3)+"','"+jTable1.getValueAt(i, 4)+"','"+jTable1.getValueAt(i, 5)+"')";
+                java.sql.PreparedStatement pst=c.prepareStatement(sql);
+                pst.execute();
+                JOptionPane.showMessageDialog(null, "Penyimpanan Data Berhasil");
                 //PreparedStatement p = c.prepareStatement(sql);
                 //p.executeUpdate();
                 //p.close();
             }
         } catch (Exception e) {
-            System.out.println("Simpan Rincian Penjualan Error!");
+            JOptionPane.showMessageDialog(this, e.getMessage());
         }
         clear();
         utama();

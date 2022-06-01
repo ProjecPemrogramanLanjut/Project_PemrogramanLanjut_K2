@@ -10,7 +10,7 @@ public class koneksi {
     public static Connection getKoneksi(){
         if (koneksi==null) {
             try{
-                String url ="jdbc:mysql://localhost/db_sipbar";
+                String url ="jdbc:mysql://localhost/toko_buku";
                 String user="root";
                 String pass="";
                 DriverManager.registerDriver(new com.mysql.jdbc.Driver());
