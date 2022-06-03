@@ -1,7 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a26328a7-14a5-46ce-95c9-99958fe7998e">
-	<queryString language="SQL">
-		<![CDATA[SELECT * FROM tb_keluar ORDER BY id_bk asc]]>
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="awal" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="akhir" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT * FROM tb_keluar 
+WHERE tanggal BETWEEN $P{awal} AND $P{akhir}]]>
 	</queryString>
 	<field name="tanggal" class="java.sql.Date">
 		<fieldDescription><![CDATA[]]></fieldDescription>
@@ -26,18 +36,18 @@
 			<frame>
 				<reportElement mode="Opaque" x="-20" y="-20" width="595" height="92" backcolor="#006699" uuid="ec4d837e-be22-42b6-b2fe-0c59c4d352af"/>
 				<staticText>
-					<reportElement x="20" y="20" width="234" height="43" forecolor="#FFFFFF" uuid="36a63aa4-eaad-415e-bf1b-bdd531072e3a"/>
+					<reportElement x="20" y="20" width="488" height="43" forecolor="#FFFFFF" uuid="36a63aa4-eaad-415e-bf1b-bdd531072e3a"/>
 					<textElement>
-						<font size="34" isBold="true"/>
+						<font fontName="Garamond" size="34" isBold="true"/>
 					</textElement>
-					<text><![CDATA[TITLE]]></text>
+					<text><![CDATA[LAPORAN BARANG KELUAR]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="395" y="43" width="180" height="20" forecolor="#FFFFFF" uuid="b101b1dd-54f5-464f-9e31-0f79ec00a866"/>
+					<reportElement x="395" y="63" width="180" height="20" forecolor="#FFFFFF" uuid="b101b1dd-54f5-464f-9e31-0f79ec00a866"/>
 					<textElement textAlignment="Right">
-						<font size="14" isBold="false"/>
+						<font fontName="PMingLiU-ExtB" size="14" isBold="false"/>
 					</textElement>
-					<text><![CDATA[Add a description here]]></text>
+					<text><![CDATA[Toko Buku Full Sun]]></text>
 				</staticText>
 			</frame>
 		</band>
@@ -55,35 +65,35 @@
 				<textElement textAlignment="Center">
 					<font size="14" isBold="true"/>
 				</textElement>
-				<text><![CDATA[tanggal]]></text>
+				<text><![CDATA[Tanggal]]></text>
 			</staticText>
 			<staticText>
 				<reportElement mode="Opaque" x="111" y="0" width="111" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="18807b89-c971-4452-aa89-af734c68b6f8"/>
 				<textElement textAlignment="Center">
 					<font size="14" isBold="true"/>
 				</textElement>
-				<text><![CDATA[id_bk]]></text>
+				<text><![CDATA[ID Keluar]]></text>
 			</staticText>
 			<staticText>
 				<reportElement mode="Opaque" x="222" y="0" width="111" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="fd18e2de-6b82-4cb7-8d47-6090b24442fc"/>
 				<textElement textAlignment="Center">
 					<font size="14" isBold="true"/>
 				</textElement>
-				<text><![CDATA[kode_buku]]></text>
+				<text><![CDATA[Kode Barang]]></text>
 			</staticText>
 			<staticText>
 				<reportElement mode="Opaque" x="333" y="0" width="111" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="e46a25ed-377e-4543-a893-bced6f670873"/>
 				<textElement textAlignment="Center">
 					<font size="14" isBold="true"/>
 				</textElement>
-				<text><![CDATA[judul]]></text>
+				<text><![CDATA[Judul]]></text>
 			</staticText>
 			<staticText>
 				<reportElement mode="Opaque" x="444" y="0" width="111" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="cb27afb0-4489-4024-9bb5-ee050d6ee092"/>
 				<textElement textAlignment="Center">
 					<font size="14" isBold="true"/>
 				</textElement>
-				<text><![CDATA[jumlah]]></text>
+				<text><![CDATA[Jumlah]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
@@ -92,7 +102,7 @@
 			<line>
 				<reportElement positionType="FixRelativeToBottom" x="0" y="19" width="555" height="1" uuid="fb392d68-6819-48db-82c6-fecd7c75915c"/>
 			</line>
-			<textField isStretchWithOverflow="true">
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy">
 				<reportElement x="0" y="0" width="111" height="20" uuid="b0b0116a-195e-48ad-ac08-f0069c825cfd"/>
 				<textElement>
 					<font size="14"/>
@@ -133,7 +143,7 @@
 		<band/>
 	</columnFooter>
 	<pageFooter>
-		<band height="17">
+		<band height="161">
 			<textField>
 				<reportElement mode="Opaque" x="0" y="4" width="515" height="13" backcolor="#E6E6E6" uuid="e91e555e-8c7d-429b-a0b7-005caf7ff38e"/>
 				<textElement textAlignment="Right"/>

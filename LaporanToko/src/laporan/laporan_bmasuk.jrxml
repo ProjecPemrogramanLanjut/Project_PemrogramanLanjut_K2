@@ -3,8 +3,15 @@
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<queryString language="SQL">
-		<![CDATA[SELECT * FROM tb_masuk ORDER BY id_bm asc]]>
+	<parameter name="awal" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="akhir" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT * FROM tb_masuk
+WHERE tanggal BETWEEN $P{awal} AND $P{akhir}]]>
 	</queryString>
 	<field name="tanggal" class="java.sql.Date">
 		<fieldDescription><![CDATA[]]></fieldDescription>
@@ -95,7 +102,7 @@
 			<line>
 				<reportElement positionType="FixRelativeToBottom" x="0" y="19" width="555" height="1" uuid="88a8b2bf-0c26-4f2a-8141-c6e80d7f224e"/>
 			</line>
-			<textField isStretchWithOverflow="true">
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy">
 				<reportElement x="0" y="0" width="111" height="20" uuid="fd123368-46cd-41dc-a734-882a663df9f5"/>
 				<textElement textAlignment="Justified">
 					<font size="14"/>
