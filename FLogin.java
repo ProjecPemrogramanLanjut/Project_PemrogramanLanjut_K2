@@ -5,13 +5,14 @@
  */
 package projekbesar;
 import java.awt.Dimension;
+import java.awt.HeadlessException;
 import java.awt.Toolkit;
-import projekbesar.koneksi;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import javax.swing.JOptionPane;
 
 
 public class FLogin extends javax.swing.JFrame {
@@ -25,6 +26,24 @@ public class FLogin extends javax.swing.JFrame {
       
         this.setLocation(dmn.width/2-this.getWidth()/2,dmn.height/2-this.getHeight()/2);
         this.setTitle("Login");
+    }
+    
+    public void Login() throws SQLException{
+        
+//            String query = "SELECT*FROM user where username='"+txUsername.getText()+"' and password='"+pwPass.getText()+"'";
+//
+//            ResultSet rs = st.executeQuery(query);
+//            
+//           if(rs.next()){
+//                JOptionPane.showMessageDialog(null, "Login Successfully");
+//                this.dispose();
+//           }else{
+//               JOptionPane.showMessageDialog(null, "Salah Username atau Password");
+//               pwPass.requestFocus();
+//           }
+//        } catch (HeadlessException | SQLException e) {
+//            JOptionPane.showMessageDialog(this, e.getMessage());
+//        } 
     }
 
     /**
@@ -47,7 +66,7 @@ public class FLogin extends javax.swing.JFrame {
         pwPass = new javax.swing.JPasswordField();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        btLogin = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -76,12 +95,12 @@ public class FLogin extends javax.swing.JFrame {
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText("Book Store");
 
-        jButton1.setFont(new java.awt.Font("Sylfaen", 0, 11)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(255, 153, 0));
-        jButton1.setText("Login");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btLogin.setFont(new java.awt.Font("Sylfaen", 0, 11)); // NOI18N
+        btLogin.setForeground(new java.awt.Color(255, 153, 0));
+        btLogin.setText("Login");
+        btLogin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btLoginActionPerformed(evt);
             }
         });
 
@@ -100,7 +119,7 @@ public class FLogin extends javax.swing.JFrame {
         jDesktopPane1.setLayer(pwPass, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jDesktopPane1.setLayer(jLabel3, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jDesktopPane1.setLayer(jLabel4, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jDesktopPane1.setLayer(jButton1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jDesktopPane1.setLayer(btLogin, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jDesktopPane1.setLayer(jButton2, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout jDesktopPane1Layout = new javax.swing.GroupLayout(jDesktopPane1);
@@ -121,7 +140,7 @@ public class FLogin extends javax.swing.JFrame {
                     .addGroup(jDesktopPane1Layout.createSequentialGroup()
                         .addGroup(jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jDesktopPane1Layout.createSequentialGroup()
-                                .addComponent(jButton1)
+                                .addComponent(btLogin)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jButton2))
                             .addComponent(txUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 282, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -148,7 +167,7 @@ public class FLogin extends javax.swing.JFrame {
                 .addComponent(pwPass, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
                 .addGroup(jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
+                    .addComponent(btLogin)
                     .addComponent(jButton2))
                 .addContainerGap())
         );
@@ -169,12 +188,46 @@ public class FLogin extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        aksi_login();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void btLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btLoginActionPerformed
+        String user = txUsername.getText(); 
+        String pass = String.valueOf(pwPass.getPassword());
+                
+        try{
+            Connection c = koneksi.getKoneksi();
+            Statement st = c.createStatement();
+            @SuppressWarnings("deprecation")
+            
+            String query = "SELECT*FROM user where username='"+txUsername.getText()+"'";
+            ResultSet rs=st.executeQuery(query);
+            if(rs.next()){
+                String pass_db=rs.getString("password");
+                if (pass_db.equalsIgnoreCase(Encryp.MD5(pass))){
+                    //go to home
+                    JOptionPane.showMessageDialog(rootPane,"Login Berhasil");
+                    Kasir ks = new Kasir();
+                    ks.setVisible(true);
+                    ks.pack();
+                    
+                    ks.setLocationRelativeTo(null);
+                    this.dispose();
+                }else{
+                    JOptionPane.showMessageDialog(rootPane, "Password Salah");
+                    pwPass.setText("");
+                    txUsername.requestFocus();
+                }
+            }else{
+                JOptionPane.showMessageDialog(rootPane, "Username Salah");
+                txUsername.setText("");
+                pwPass.setText("");
+                txUsername.requestFocus();
+            }
+        }catch(Exception e){
+            System.out.println(e);
+        }
+    }//GEN-LAST:event_btLoginActionPerformed
 
     private void jButton1ActionPressed(java.awt.event.KeyEvent evt) {                                         
-        aksi_login();
+
     }
     
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -185,28 +238,6 @@ public class FLogin extends javax.swing.JFrame {
         System.exit(0);
     }//GEN-LAST:event_jButton2ActionPerformed
 
-    private void aksi_login(){
-        try{
-            Connection c = koneksi.getKoneksi();
-            Statement stat = c.createStatement();
-            String sql = "  SELECT id_user,pass,lev_akses " +
-                    "       FROM pos_user " +
-                    "       WHERE id_user='"+txUsername.getText().replaceAll("'", "")+"' " +
-                    "           AND pass = '"+pwPass.getText().replaceAll("'", "")+"'";
-            ResultSet res = stat.executeQuery(sql);
-            while(res.next()){
-                user = res.getString(3);
-                akses = "-";
-                this.setVisible(false);
-                frMenu x = new frMenu(Kasir);
-                x.setVisible(true);
-               
-            }
-            if(akses.equals("")){
-                JOptionPane.showMessageDialog(this, "Periksa Kembali");
-            }
-        }catch(Exception ex){}
-    }
     /**
      * @param args the command line arguments
      */
@@ -243,7 +274,7 @@ public class FLogin extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btLogin;
     private javax.swing.JButton jButton2;
     private javax.swing.JColorChooser jColorChooser1;
     private javax.swing.JColorChooser jColorChooser2;
