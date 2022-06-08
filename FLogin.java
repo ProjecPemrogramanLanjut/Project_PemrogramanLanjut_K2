@@ -40,16 +40,23 @@ public class FLogin extends javax.swing.JFrame {
                 if(txUsername.getText().equals(rs.getString("username"))&&pwPass.getText().equals(rs.getString("password"))){
                     level=(rs.getString("level"));
                     if(level.equals("kasir")){
+                          MenuKasir();
                           JOptionPane.showMessageDialog(null,"Selamat Datang Kasir !");
-                    }else{
-                        JOptionPane.showMessageDialog(this,"Kamu bukan siapa-siapa !");
                     }
+                }else{
+                    JOptionPane.showMessageDialog(this,"Akun kamu tidak ada!");
                 }
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
         }
     }
+    
+    public void MenuKasir(){
+        new Kasir().setVisible(true);
+        dispose();
+    }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
