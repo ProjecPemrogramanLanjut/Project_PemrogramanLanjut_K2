@@ -21,29 +21,34 @@ public class FLogin extends javax.swing.JFrame {
 
     public FLogin() {
         initComponents();
-        initComponents();
         //kodeLogin = login;
       
+        
         this.setLocation(dmn.width/2-this.getWidth()/2,dmn.height/2-this.getHeight()/2);
         this.setTitle("Login");
     }
     
-    public void Login() throws SQLException{
-        
-//            String query = "SELECT*FROM user where username='"+txUsername.getText()+"' and password='"+pwPass.getText()+"'";
-//
-//            ResultSet rs = st.executeQuery(query);
-//            
-//           if(rs.next()){
-//                JOptionPane.showMessageDialog(null, "Login Successfully");
-//                this.dispose();
-//           }else{
-//               JOptionPane.showMessageDialog(null, "Salah Username atau Password");
-//               pwPass.requestFocus();
-//           }
-//        } catch (HeadlessException | SQLException e) {
-//            JOptionPane.showMessageDialog(this, e.getMessage());
-//        } 
+    public void Login(){
+        String level;
+        try {
+            Connection c = koneksi.getKoneksi();
+            String sql = "SELECT*FROM user WHERE username='"+txUsername.getText()+"' AND password='"+pwPass.getText()+"'";
+            Statement stat = c.createStatement();
+            ResultSet rs = stat.executeQuery(sql);
+            
+            if(rs.next()){
+                if(txUsername.getText().equals(rs.getString("username"))&&pwPass.getText().equals(rs.getString("password"))){
+                    level=(rs.getString("level"));
+                    if(level.equals("kasir")){
+                          JOptionPane.showMessageDialog(null,"Selamat Datang Kasir !");
+                    }else{
+                        JOptionPane.showMessageDialog(this,"Kamu bukan siapa-siapa !");
+                    }
+                }
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        }
     }
 
     /**
@@ -189,7 +194,8 @@ public class FLogin extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btLoginActionPerformed
-        String user = txUsername.getText(); 
+       Login();
+        /**String user = txUsername.getText(); 
         String pass = String.valueOf(pwPass.getPassword());
                 
         try{
@@ -221,9 +227,9 @@ public class FLogin extends javax.swing.JFrame {
                 pwPass.setText("");
                 txUsername.requestFocus();
             }
-        }catch(Exception e){
+        }catch(HeadlessException | SQLException e){
             System.out.println(e);
-        }
+        }**/
     }//GEN-LAST:event_btLoginActionPerformed
 
     private void jButton1ActionPressed(java.awt.event.KeyEvent evt) {                                         
