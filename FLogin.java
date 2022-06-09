@@ -39,14 +39,19 @@ public class FLogin extends javax.swing.JFrame {
             if(rs.next()){
                 if(txUsername.getText().equals(rs.getString("username"))&&pwPass.getText().equals(rs.getString("password"))){
                     level=(rs.getString("level"));
+                    
                     if(level.equals("kasir")){
+                          String query = "INSERT INTO log(kd_kar, Username) VALUES ('"+rs.getString("id_karyawan")+"','"+txUsername.getText()+"')";
+                          java.sql.PreparedStatement pst=c.prepareStatement(query);
+                          pst.execute();
+                
                           MenuKasir();
                           JOptionPane.showMessageDialog(null,"Selamat Datang Kasir !");
                     }
                 }else{
                     JOptionPane.showMessageDialog(this,"Akun kamu tidak ada!");
                 }
-            }
+            } 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
         }
@@ -57,6 +62,18 @@ public class FLogin extends javax.swing.JFrame {
         dispose();
     }
     
+    public void KirimID(){
+        try{
+            Connection c = koneksi.getKoneksi();
+            String sql = "SELECT*FROM user WHERE username='"+txUsername.getText()+"' AND password='"+pwPass.getText()+"'";
+            Statement stat = c.createStatement();
+            ResultSet rs = stat.executeQuery(sql);
+            
+            String ID = (rs.getString("Id_karyawan"));
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
